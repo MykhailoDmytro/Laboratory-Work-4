@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+
 jobs:
   PrintProcessingSoftwareVersions:
     runs-on: ubuntu-latest
@@ -20,4 +21,11 @@ jobs:
       - name: Print PostgreSQL Version
         run: psql --version
       - name: Print MongoDB Version
-        run: mongod --version
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget gpg
+          wget -qO - https://www.mongodb.org/static/pgp/server-8.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-8.gpg
+          echo "deb [ signed-by=/usr/share/keyrings/mongodb-8.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+          sudo apt-get update -y
+          sudo apt-get install -y mongodb-org-server
+          mongod --version
