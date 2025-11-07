@@ -1,4 +1,4 @@
-name: Print Software Versions (HarmonyLife)
+name: HarmonyLife
 
 on:
   push:
