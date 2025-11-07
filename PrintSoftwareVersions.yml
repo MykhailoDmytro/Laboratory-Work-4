@@ -1,29 +1,23 @@
 name: HarmonyLife
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 jobs:
   PrintProcessingSoftwareVersions:
     runs-on: ubuntu-latest
     steps:
       - name: Print Node.js Version
         run: node --version
-
       - name: Print Python Version
         run: python3 --version
-
       - name: Print npm Version
         run: npm --version
-
   PrintDBMSVersions:
     runs-on: ubuntu-latest
     needs: [PrintProcessingSoftwareVersions]
     steps:
       - name: Print PostgreSQL Version
         run: psql --version
-
       - name: Print MongoDB Version
         run: mongod --version
