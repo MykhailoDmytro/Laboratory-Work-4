@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/data-schema.json",
+  "title": "Physical JSON Schema of Application Data",
+  "description": "Physical representation of user, sleep, statistics, and property data.",
+  "type": "object",
+  "required": ["user", "sleeps", "sleepStats", "dataSources", "properties"],
+  "properties": {
+    "user": {
+      "type": "object",
+      "description": "Basic user profile",
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 30,
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{2,29}$",
+          "description": "Username must start with a letter."
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^\\+?[0-9\\- ]{7,15}$"
+        }
+      },
+      "required": ["username"]
+    },
+    "sleeps": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Sleep episodes of the user",
+      "items": {
+        "type": "object",
+        "required": ["start_time", "end_time", "duration_min"],
+        "properties": {
+          "start_time": { "type": "string", "format": "date-time" },
+          "end_time": { "type": "string", "format": "date-time" },
+          "duration_min": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "sleepStats": {
+      "type": "array",
+      "description": "Sleep statistics per period",
+      "items": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "format": "date" },
+              "end": { "type": "string", "format": "date" }
+            },
+            "required": ["start", "end"]
+          },
+          "avg_duration_min": { "type": "integer", "minimum": 0 },
+          "avg_quality": { "type": "number", "minimum": 0, "maximum": 100 },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string", "maxLength": 500 },
+                "created_date": { "type": "string", "format": "date" }
+              },
+              "required": ["text", "created_date"]
+            }
+          }
+        }
+      }
+    },
+    "searchParams": {
+      "type": "object",
+      "description": "Search filters for property lookup",
+      "properties": {
+        "district": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z\\s-]{1,49}$",
+          "description": "District name (letters, spaces, dashes)"
+        },
+        "house_type": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z-]{1,29}$",
+          "description": "House type (letters and dashes)"
+        },
+        "min_rooms": { "type": "integer", "minimum": 0 },
+        "max_price": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "dataSources": {
+      "type": "array",
+      "minItems": 1,
+      "description": "External data providers",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 100 },
+          "region": { "type": "string" },
+          "type": { "type": "string", "enum": ["DB", "API", "Service"] }
+        }
+      }
+    },
+    "properties": {
+      "type": "array",
+      "description": "Information about available properties",
+      "items": {
+        "type": "object",
+        "required": ["district", "house_type", "rooms", "area_m2", "rent_price"],
+        "properties": {
+          "district": { "type": "string" },
+          "house_type": { "type": "string" },
+          "rooms": { "type": "integer", "minimum": 0 },
+          "area_m2": { "type": "number", "exclusiveMinimum": 0 },
+          "rent_price": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    }
+  }
+}
