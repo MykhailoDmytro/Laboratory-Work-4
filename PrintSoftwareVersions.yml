@@ -1,1 +1,29 @@
+name: Print Software Versions (HarmonyLife)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  PrintProcessingSoftwareVersions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Node.js
+        run: node --version
+      - name: npm
+        run: npm --version
+      - name: Python
+        run: python3 --version
+      - name: pip
+        run: pip3 --version
+
+  PrintDBMSVersions:
+    runs-on: ubuntu-latest
+    needs: [PrintProcessingSoftwareVersions]
+    steps:
+      - name: PostgreSQL (server)
+        run: docker run --rm postgres:16 postgres --version
+      - name: MongoDB (server)
+        run: docker run --rm mongo:6 mongod --version
 
