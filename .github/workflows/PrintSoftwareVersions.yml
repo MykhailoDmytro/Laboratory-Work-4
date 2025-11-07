@@ -1,4 +1,4 @@
-name: HarmonyLife
+name: PrintProcessingSoftwareVersions
 on:
   push:
     branches: [main]
