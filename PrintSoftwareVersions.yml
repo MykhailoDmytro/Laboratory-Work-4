@@ -15,7 +15,7 @@ jobs:
         run: npm --version
   PrintDBMSVersions:
     runs-on: ubuntu-latest
-    needs: [PrintProcessingSoftwareVersions]
+    needs: [HarmonyLife]
     steps:
       - name: Print PostgreSQL Version
         run: psql --version
