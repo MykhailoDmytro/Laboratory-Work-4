@@ -13,7 +13,7 @@ jobs:
       - name: Install SQLFluff
         run: pip install sqlfluff
       - name: Lint SQL schema
-        run: sqlfluff lint DataSchema.sql --dialect postgres
+        run: sqlfluff lint DataSchemaModified.sql --dialect postgres
 
   JSONLinter:
     runs-on: ubuntu-latest
