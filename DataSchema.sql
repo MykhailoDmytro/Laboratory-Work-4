@@ -1,75 +1,70 @@
-CREATE TABLE AppUser (
-    user_id SERIAL,
-    username VARCHAR(30) NOT NULL,
-    email VARCHAR(50),
-    phone VARCHAR(15),
-    PRIMARY KEY (user_id)
+CREATE TABLE APP_USER (
+    USER_ID SERIAL PRIMARY KEY,
+    USERNAME VARCHAR(30) NOT NULL,
+    EMAIL VARCHAR(50),
+    PHONE VARCHAR(15)
 );
 
-CREATE TABLE Sleep (
-    sleep_id SERIAL,
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL,
-    duration_min INT CHECK (duration_min > 0),
-    user_id INT NOT NULL,
-    PRIMARY KEY (sleep_id),
-    FOREIGN KEY (user_id) REFERENCES AppUser(user_id)
+CREATE TABLE SLEEP (
+    SLEEP_ID SERIAL PRIMARY KEY,
+    START_TIME TIMESTAMP NOT NULL,
+    END_TIME TIMESTAMP NOT NULL,
+    DURATION_MIN INT CHECK (DURATION_MIN > 0),
+    USER_ID INT NOT NULL,
+    FOREIGN KEY (USER_ID) REFERENCES APP_USER (USER_ID)
 );
 
-CREATE TABLE SleepStat (
-    stat_id SERIAL,
-    period_start DATE NOT NULL,
-    period_end DATE NOT NULL,
-    avg_duration_min INT CHECK (avg_duration_min >= 0),
-    avg_quality REAL CHECK (avg_quality BETWEEN 0 AND 100),
-    user_id INT NOT NULL,
-    PRIMARY KEY (stat_id),
-    FOREIGN KEY (user_id) REFERENCES AppUser(user_id)
+CREATE TABLE SLEEP_STAT (
+    STAT_ID SERIAL PRIMARY KEY,
+    PERIOD_START DATE NOT NULL,
+    PERIOD_END DATE NOT NULL,
+    AVG_DURATION_MIN INT CHECK (AVG_DURATION_MIN >= 0),
+    AVG_QUALITY REAL CHECK (AVG_QUALITY BETWEEN 0 AND 100),
+    USER_ID INT NOT NULL,
+    FOREIGN KEY (USER_ID) REFERENCES APP_USER (USER_ID)
 );
 
-CREATE TABLE Recommendation (
-    rec_id SERIAL,
-    text VARCHAR(500),
-    created_date DATE,
-    stat_id INT NOT NULL,
-    PRIMARY KEY (rec_id),
-    FOREIGN KEY (stat_id) REFERENCES SleepStat(stat_id)
+CREATE TABLE RECOMMENDATION (
+    REC_ID SERIAL PRIMARY KEY,
+    TEXT VARCHAR(500),
+    CREATED_DATE DATE,
+    STAT_ID INT NOT NULL,
+    FOREIGN KEY (STAT_ID) REFERENCES SLEEP_STAT (STAT_ID)
 );
 
-CREATE TABLE SearchParams (
-    params_id SERIAL,
-    district VARCHAR(50),
-    house_type VARCHAR(30),
-    min_rooms INT,
-    min_area_m2 FLOAT,
-    max_price NUMERIC(10,2),
-    user_id INT NOT NULL,
-    PRIMARY KEY (params_id),
-    FOREIGN KEY (user_id) REFERENCES AppUser(user_id),
-
-    CONSTRAINT district_pattern
-        CHECK (district IS NULL OR district ~ '^[[:alpha:]][[:alpha:][:space:]-]{1,49}$'),
-
-    CONSTRAINT house_type_pattern
-        CHECK (house_type IS NULL OR house_type ~ '^[[:alpha:]][[:alpha:]-]{1,29}$')
+CREATE TABLE SEARCH_PARAMS (
+    PARAMS_ID SERIAL PRIMARY KEY,
+    DISTRICT VARCHAR(50),
+    HOUSE_TYPE VARCHAR(30),
+    MIN_ROOMS INT,
+    MIN_AREA_M2 FLOAT,
+    MAX_PRICE NUMERIC(10, 2),
+    USER_ID INT NOT NULL,
+    FOREIGN KEY (USER_ID) REFERENCES APP_USER (USER_ID),
+    CONSTRAINT DISTRICT_PATTERN CHECK (
+        DISTRICT IS NULL
+        OR DISTRICT ~ '^[[:alpha:]][[:alpha:][:space:]-]{1,49}$'
+    ),
+    CONSTRAINT HOUSE_TYPE_PATTERN CHECK (
+        HOUSE_TYPE IS NULL
+        OR HOUSE_TYPE ~ '^[[:alpha:]][[:alpha:]-]{1,29}$'
+    )
 );
 
-CREATE TABLE DataSource (
-    source_id SERIAL,
-    name VARCHAR(40) NOT NULL,
-    region VARCHAR(30),
-    type VARCHAR(15) CHECK (type IN ('DB','API','Service')),
-    PRIMARY KEY (source_id)
+CREATE TABLE DATA_SOURCE (
+    SOURCE_ID SERIAL PRIMARY KEY,
+    NAME VARCHAR(40) NOT NULL,
+    REGION VARCHAR(30),
+    SOURCE_TYPE VARCHAR(15) CHECK (SOURCE_TYPE IN ('DB', 'API', 'SERVICE'))
 );
 
-CREATE TABLE PropertyInfo (
-    property_id SERIAL,
-    district VARCHAR(40),
-    house_type VARCHAR(20),
-    rooms SMALLINT CHECK (rooms >= 0),
-    area_m2 FLOAT CHECK (area_m2 > 0),
-    rent_price NUMERIC(10,2) CHECK (rent_price > 0),
-    source_id INT NOT NULL,
-    PRIMARY KEY (property_id),
-    FOREIGN KEY (source_id) REFERENCES DataSource(source_id)
+CREATE TABLE PROPERTY_INFO (
+    PROPERTY_ID SERIAL PRIMARY KEY,
+    DISTRICT VARCHAR(40),
+    HOUSE_TYPE VARCHAR(20),
+    ROOMS SMALLINT CHECK (ROOMS >= 0),
+    AREA_M2 FLOAT CHECK (AREA_M2 > 0),
+    RENT_PRICE NUMERIC(10, 2) CHECK (RENT_PRICE > 0),
+    SOURCE_ID INT NOT NULL,
+    FOREIGN KEY (SOURCE_ID) REFERENCES DATA_SOURCE (SOURCE_ID)
 );
