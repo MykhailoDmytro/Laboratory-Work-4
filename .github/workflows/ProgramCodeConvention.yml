@@ -19,5 +19,5 @@ jobs:
       - name: Install flake8
         run: pip install flake8
 
-      - name: Run flake8 on ProgramCode.py
-        run: flake8 ProgramCode.py
+      - name: Run flake8 on ProgramCodeModified.py
+        run: flake8 ProgramCodeModified.py
